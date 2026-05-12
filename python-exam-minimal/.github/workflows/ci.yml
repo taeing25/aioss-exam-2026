@@ -1,0 +1,33 @@
+name: Python CI (TODO)
+
+on:
+  # TODO: push + pull_request 트리거 설정
+
+jobs:
+  quality:
+    # TODO: matrix 2축 이상 설정 (예: os, python-version)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        # TODO: actions/setup-python 사용 및 버전 매트릭스 연결
+        run: echo "TODO"
+
+      - name: Install dependencies
+        # TODO: requirements 설치
+        run: echo "TODO"
+
+      - name: Lint
+        # TODO: ruff check 실행
+        run: echo "TODO"
+
+      - name: Test
+        # TODO: pytest 실행
+        run: echo "TODO"
+
+      - name: Build gate
+        # TODO: 빌드 게이트 1개 이상
+        run: echo "TODO"
