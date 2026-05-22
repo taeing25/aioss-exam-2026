@@ -1,0 +1,13 @@
+{
+  "collected_at_utc": "2026-05-22T04:58:51.334468+00:00",
+  "lead_time_for_changes_hours": 0.5,
+  "deployment_frequency_per_week": 3,
+  "change_failure_rate_percent": 33.3,
+  "mttr_minutes": 15,
+  "notes": {
+    "lead_time": "feature/add-health-endpoint 브랜치 생성 ~ main merge 기준",
+    "deployment_frequency": "CI Actions run 횟수 기준 (push당 1회 배포)",
+    "cfr": "run #1 실패(ModuleNotFoundError) / 총 3회 = 33.3%",
+    "mttr": "CI 실패 알림 확인 후 pytest.ini 수정 및 재배포까지 소요 시간"
+  }
+}
