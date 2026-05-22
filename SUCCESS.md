@@ -11,8 +11,10 @@
 
 ## 문항 2. CI 파이프라인 구축 및 최적화
 - [x] 워크플로우 실행 링크 2개 이상을 남겼다.
-  - 실패 run: https://github.com/taeing25/aioss-exam-2026/actions/runs/26268879624
-  - 성공 run: https://github.com/taeing25/aioss-exam-2026/actions/runs/26269144766
+  - [개발 중 실패] https://github.com/taeing25/aioss-exam-2026/actions/runs/26268879624
+  - [개발 중 성공] https://github.com/taeing25/aioss-exam-2026/actions/runs/26269144766
+  - [제출 저장소 실패] https://github.com/taeing25/aioss-exam-2026_2343921/actions/runs/26270455814
+  - [제출 저장소 성공] https://github.com/taeing25/aioss-exam-2026_2343921/actions/runs/26270508899
 - [x] 실패 후 수정 성공 이력 1세트를 증빙했다.
   - 실패 원인: `ModuleNotFoundError: No module named 'app'` (pytest가 python-exam-minimal/을 sys.path에 추가 안 함)
   - 수정: `pytest.ini`에 `pythonpath = .` 추가 → 재실행 성공
