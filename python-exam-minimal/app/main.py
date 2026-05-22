@@ -8,8 +8,7 @@ app = FastAPI(title="AI OSS Exam API (Minimal)", version="0.1.0")
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    # TODO: 상태 점검 응답을 구현하세요.
-    raise NotImplementedError("TODO: /health")
+    return {"status": "ok"}
 
 
 @app.get("/recommendation")
