@@ -3,21 +3,30 @@ import os
 
 
 def _to_bool(value: str | None, default: bool = False) -> bool:
-    # TODO: 문자열 환경변수를 bool로 변환하세요.
-    # 예: "1", "true", "yes", "on" -> True
-    raise NotImplementedError("TODO: _to_bool")
+    """환경변수 문자열을 bool로 변환. '1','true','yes','on' -> True."""
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _rollout_bucket(user_id: str) -> int:
-    # TODO: 사용자 ID를 0~99 버킷으로 매핑하세요.
-    # 힌트 제거 버전: 해시 방식은 자유롭게 선택 가능
-    raise NotImplementedError("TODO: _rollout_bucket")
+    """user_id를 0~99 버킷으로 매핑 (SHA-256 해시 기반)."""
+    digest = int(hashlib.sha256(user_id.encode()).hexdigest(), 16)
+    return digest % 100
 
 
 def is_next_recommender_enabled(user_id: str) -> bool:
-    # TODO: FEATURE_NEXT_RECOMMENDER, FEATURE_NEXT_RECOMMENDER_ROLLOUT 기반으로
-    #       다음 추천기 활성화 여부를 반환하세요.
-    # 요구사항:
-    # - 기본값은 OFF
-    # - rollout 값은 0~100으로 보정
-    raise NotImplementedError("TODO: is_next_recommender_enabled")
+    """FEATURE_NEXT_RECOMMENDER 환경변수 + rollout 비율로 활성화 여부 반환.
+    기본값 OFF.
+    """
+    enabled = _to_bool(os.environ.get("FEATURE_NEXT_RECOMMENDER"), default=False)
+    if not enabled:
+        return False
+
+    rollout_str = os.environ.get("FEATURE_NEXT_RECOMMENDER_ROLLOUT", "100")
+    try:
+        rollout = max(0, min(100, int(rollout_str)))
+    except ValueError:
+        rollout = 0
+
+    return _rollout_bucket(user_id) < rollout

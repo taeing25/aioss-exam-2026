@@ -1,33 +1,53 @@
-name: Python CI (TODO)
+name: Python CI
 
 on:
-  # TODO: push + pull_request 트리거 설정
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: python-exam-minimal
 
 jobs:
   quality:
-    # TODO: matrix 2축 이상 설정 (예: os, python-version)
-    runs-on: ubuntu-latest
+    name: CI (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]      # 축 1: OS
+        python-version: ['3.10', '3.11']         # 축 2: Python 버전
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        # TODO: actions/setup-python 사용 및 버전 매트릭스 연결
-        run: echo "TODO"
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'                                        # 캐시 최적화
+          cache-dependency-path: python-exam-minimal/requirements.txt
 
       - name: Install dependencies
-        # TODO: requirements 설치
-        run: echo "TODO"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Lint
-        # TODO: ruff check 실행
-        run: echo "TODO"
+      - name: Lint (ruff)                                    # 품질 게이트 1
+        run: ruff check .
 
-      - name: Test
-        # TODO: pytest 실행
-        run: echo "TODO"
+      - name: Test (pytest)                                  # 품질 게이트 2
+        run: pytest tests/ -v --tb=short --junit-xml=test-results.xml
 
-      - name: Build gate
-        # TODO: 빌드 게이트 1개 이상
-        run: echo "TODO"
+      - name: Build gate                                     # 품질 게이트 3
+        run: python -c "from app.main import app; print('Build OK')"
+
+      - name: Upload test results                            # 실패 원인 아티팩트
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-py${{ matrix.python-version }}
+          path: python-exam-minimal/test-results.xml

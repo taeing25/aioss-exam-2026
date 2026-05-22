@@ -13,9 +13,12 @@ def health() -> dict[str, str]:
 
 @app.get("/recommendation")
 def recommendation(user_id: str = Query(..., min_length=3)) -> dict[str, str | float]:
-    # TODO: Feature Flag에 따라 old/new recommender를 선택하고
-    #       표준 응답(JSON)을 반환하세요.
-    raise NotImplementedError("TODO: /recommendation")
+    """Feature Flag에 따라 old/new recommender 선택 후 JSON 반환."""
+    if is_next_recommender_enabled(user_id):
+        result = next_recommender(user_id)
+    else:
+        result = old_recommender(user_id)
+    return {"user_id": result.user_id, "model": result.model, "score": result.score}
 
 
 if __name__ == "__main__":
